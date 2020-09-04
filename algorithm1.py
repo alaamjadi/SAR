@@ -230,8 +230,7 @@ class Tree():
 			return last_prefix
 ###################################################################################################################
 
-
-###################<<<<<<<Other Functons>>>>>>>######################################
+############### IP Conversion from Binary to Decimal ###############
 def fromBinarytoIP(string):
 	splitter = 8
 	divided = [string[i:i+splitter] for i in range(0, len(string), splitter)]
@@ -244,19 +243,11 @@ def fromBinarytoIP(string):
 	for i in range(1, 4):
 		IPaddress = IPaddress + '.' + str(decimal[i])
 	return str(IPaddress)
-###################################################################################################################
 
-def fromIPtoBinary(string):
-	w1, w2, w3, w4 = string.split(".")
-	binaryN = [str(bin(int(w1)))[2:], str(bin(int(w2)))[2:], str(bin(int(w3)))[2:], str(bin(int(w4)))[2:]]
-	binaryN = paddingAddress(binaryN)
-	addressIP = binaryN[0]
-	i = 1
-	while i < 4:
-		addressIP = addressIP+binaryN[i]
-		i = i+1
-	return str(addressIP)
-###################################################################################################################
+
+############### IP Conversion from Decimal to Bin ###############
+def fromIPtoBinary(item):
+	return '{0:08b}'.format( int(item.split(".")[0]))+'{0:08b}'.format( int(item.split(".")[1]))+'{0:08b}'.format( int(item.split(".")[2]))+'{0:08b}'.format( int(item.split(".")[3]))
 
 def paddingAddress(list):
 	i = 0
@@ -268,20 +259,9 @@ def paddingAddress(list):
 		i = i + 1
 	return padded_list
 ###################################################################################################################
-""" class incomingPacket:
-	def __init__(self):
-		self.sourceIP	=	None
-		self.destinationIP	=	None
-		self.protocolUsed	=	None
-		self.sourcePort	=	None
-		self.destinationPort	=	None
-	def binaryFormat(self):
-		self.sourceIP_b = fromIPtoBinary(self.sourceIP)
-		self.destinationIP_b = fromIPtoBinary(self.destinationIP)
-		return [self.sourceIP_b, self.destinationIP_b] """
-###################################################################################################################
 
 
+############### Incoming Packet Structure ###############
 incomingPacket = {
 	"sIP": None,
 	"dIP": None,
@@ -292,6 +272,7 @@ incomingPacket = {
 	"dIP_b" : None,
 }
 
+############### Router/Switch Rule Structure ###############
 routerSwithRule = {
 	"sNetID": None,
 	"dNetID": None,
@@ -303,19 +284,22 @@ routerSwithRule = {
 	"dPrefix" : None,
 }
 
-with open('rule_list.txt', 'r') as handler:
-	array_temp = [line.rstrip('\n') for line in handler]
-
-
-
-
-""" if __name__ == "__main__": """
+############### Read a text file ###############
 def readFile(string):
 	with open(string, 'r') as handler:
 		array_temp = [line.rstrip('\n') for line in handler]
 		return array_temp
-		
-# IP List assignment>>
+
+############### Prefix creation ###############
+def prefixBuilder (IP_MASK):
+	list1, list2 = [], []
+	list1 = IP_MASK[0].split(".")
+	for items in list1:
+		list2.append('{0:08b}'.format(int(items)))
+	binaryIP = ''.join(list2)
+	return binaryIP[:int(IP_MASK[1])]
+
+############### Assigning IP List to the structure ###############
 for each_element in readFile('incoming_packets.txt'):
 	incomingPacket['sIP'] = each_element.split(",")[0]
 	incomingPacket['dIP'] = each_element.split(",")[1]
@@ -326,7 +310,7 @@ for each_element in readFile('incoming_packets.txt'):
 	incomingPacket['dIP_b'] = fromIPtoBinary(each_element.split(",")[1])
 print ">>!Message:  Reading....IP List....Start Matching...."
 
-# Rule List assignment >>
+############### Assigning Rule List to the structure ###############
 for each_element in readFile('rule_list.txt'):
 	routerSwithRule['sNetID'] = each_element.split(",")[0]
 	routerSwithRule['dNetID'] = each_element.split(",")[1]
@@ -334,29 +318,18 @@ for each_element in readFile('rule_list.txt'):
 	routerSwithRule['sPort'] = each_element.split(",")[3]
 	routerSwithRule['dPort'] = each_element.split(",")[4]
 	routerSwithRule['action'] = each_element.split(",")[5]
-	routerSwithRule['sPrefix'] = each_element.split(",")[0]
-	routerSwithRule['dPrefix'] = each_element.split(",")[1]
+	if routerSwithRule['sNetID'] == "*":
+		routerSwithRule['sPrefix'] = "*"
+	else:
+		routerSwithRule['sPrefix'] = prefixBuilder([routerSwithRule['sNetID'].split("/")[0],routerSwithRule['sNetID'].split("/")[1]])
+	if routerSwithRule['dNetID'] == "*":
+		routerSwithRule['dPrefix'] = "*"
+	else:
+		routerSwithRule['dPrefix'] = prefixBuilder([routerSwithRule['dNetID'].split("/")[0],routerSwithRule['dNetID'].split("/")[1]])
 	print routerSwithRule
 print ">>!Message:  Reading....Rule List....Start Drawing Trie...."
 
-
-
-# Tests
-""" ip_binary = '11000000101010000000000100000001'
-ip_v4 = '192.168.1.2'
-print fromBinarytoIP(ip_binary)
-print fromIPtoBinary(ip_v4)
- """
-
-""" incoming1 = incomingPacket()
-incoming1.sourceIP = "192.168.1.1"
-incoming1.destinationIP = "10.0.0.1"
-print incoming1.__dict__
-print incoming1.binaryFormat.__dict__
-print incoming1.binaryFormat()[0]
- """
-""" print structur """
-""" print incoming1.binaryFormat.sourceIPb """
-
-""" IP_address = "192.168.1.1/16"
-print ipaddr.IPNetwork(IP_address).broadcast """
+###											   ###		
+#######									   #######
+############### Test and Debugging ###############
+""" if __name__ == "__main__": """
