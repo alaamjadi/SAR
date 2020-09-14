@@ -24,10 +24,13 @@ for i in range(0, len(src_sub_binaries)):
 
 # Test incoming_packets2.txt
 packets = nu.read_packets(packet_file)
-start = int(round(time.time() * 1000))
+start = time.time_ns()
 actions = bt.get_packets_actions(root, packets, rules, False)
-stop = int(round(time.time() * 1000))
-print("It took %d ms to classify %d packets" % ((stop - start), 10**i))
+stop = time.time_ns()
+Elpased = int(stop - start)
+average = Elpased/100000
+print("It took %d ns to classify 100.000 packets" % Elpased)
+print("The average time for each packet is %d ns" % average)
 
 #print(actions)
 

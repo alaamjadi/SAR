@@ -3,7 +3,7 @@ import network_utils as nu
 """
 Container for binary tree nodes
 """
-class Node(object):
+class Node:
     value = None # used for debugging
     zero = None # zero child
     one = None # one child
@@ -23,7 +23,8 @@ This Method add second-tier nodes to the tree recursively
 def add_dst_nodes(node, rule, index, rule_index):
     # reach end of the second-tier add rules
     if len(rule) <= index :
-        if node.zero is None: # we don't have a new node
+        # we don't have a new node
+        if node.zero is None: 
             node.zero = Node("$",end=True)
             
         if not node.zero.end :
@@ -32,7 +33,8 @@ def add_dst_nodes(node, rule, index, rule_index):
         
         node.zero.rules.append(rule_index)
         
-        return # miyad birun, mire too main
+        # miyad birun, mire too main
+        return
     
     # Add zero child
     if rule[index] == "0":
@@ -58,7 +60,8 @@ def add_src_nodes(node, rule, index, dst_rule, rule_index):
         # in case of src_sub=10.0.0.0/24 dst_sub = '*' or src_sub='*' dst_sub = '10.0.0.0/24' or src_sub='*' dst_sub = '*'
         # this block will execute as well
         if dst_rule is None:
-            if not node.end: # if we have match
+            # if we have match
+            if not node.end: 
                 node.rules = []
 
             node.end = True
@@ -67,9 +70,10 @@ def add_src_nodes(node, rule, index, dst_rule, rule_index):
         
         # add next-trie root to the tree
         if node.dst_root is None:
-            node.dst_root = Node(value="#") # root of the 2nd triangle
-        
-        add_dst_nodes(node.dst_root, dst_rule, 0, rule_index) # create 2nd triangle
+            # root of the 2nd triangle
+            node.dst_root = Node(value="#")
+        # create 2nd triangle
+        add_dst_nodes(node.dst_root, dst_rule, 0, rule_index)
         return
     
     # add zero child recursive
@@ -120,9 +124,12 @@ def match_dst(node, dst_bin, dst_index, actions):
         actions.extend(node.rules)
         # we should not return otherwise we can gave more end
     
-    if dst_index >= 32: # if it's 32bits
-        if node.zero.value == "$": #match final
-            actions.extend(node.zero.rules) #rules added
+    # if it's 32bits
+    if dst_index >= 32:
+        #match final
+        if node.zero.value == "$":
+            #rules added
+            actions.extend(node.zero.rules)
         return
     
     if node.zero is not None and dst_bin[dst_index] == "0":
@@ -137,7 +144,8 @@ def match_dst(node, dst_bin, dst_index, actions):
 
 def match(node, src_bin, src_index, dst_bin, dst_index, actions):
     if node.end :
-        actions.extend(node.rules) #rules=[1,2] > [1,2,3]
+        #rules=[1,2] > [1,2,3]
+        actions.extend(node.rules)
     
     #If src_incoming_IP matched with src_rule > 2nd tier
     if node.dst_root is not None:
@@ -156,13 +164,14 @@ def match(node, src_bin, src_index, dst_bin, dst_index, actions):
 
 def get_packets_actions(root, packets, rules, debug):
     actions=[]
-
+    noMatch = 0
+    Matched = 0
     for packet in packets:
         candidate_actions = []
         match(root, packet.src_binary, 0, packet.dst_binary, 0, candidate_actions)
-
+    
         final_actions = []
-
+    
         for i in candidate_actions:
             if rules[i].protocol != '*' and rules[i].protocol != packet.protocol:
                 continue
@@ -172,11 +181,36 @@ def get_packets_actions(root, packets, rules, debug):
                 continue
             final_actions.append(i)
         
-       """  if debug:
-            print(final_actions)
-            print("action picked: " + str(sorted(final_actions)[0])) """
-        actions.append(rules[sorted(final_actions)[0]].action)
-        final_rule = rules[sorted(final_actions)[0]]
-        print("Packet %s matched with %s action: %s " % (packet.src_ip, final_rule.src_sub, final_rule.action))
-
+        if debug:
+            if len(final_actions) != 0:
+                print(final_actions)
+                print("action picked: " + str(sorted(final_actions)[0]))
+            else:
+                print(final_actions)
+                print("action picked: " + "No match!")
+        if len(final_actions) != 0:
+            Matched = Matched + 1
+            final_rule = rules[sorted(final_actions)[0]]
+            print(
+                "Packet>> ".ljust(10) +
+                "sIP: %s".ljust(20) % (packet.src_ip) + 
+                "dIP: %s".ljust(20) % (packet.dst_ip) +
+                "protocol: %s".ljust(14) % (packet.protocol) +
+                "sPort: %s".ljust(12) % (packet.src_port) +
+                "dPort: %s".ljust(12) % (packet.dst_port) +
+                "\n" +
+                "Rule>>".ljust(10) +
+                "sIP: %s".ljust(20) % (final_rule.src_sub) + 
+                "dIP: %s".ljust(20) % (final_rule.dst_sub) +
+                "protocol: %s".ljust(14) % (final_rule.protocol) +
+                "sPort: %s".ljust(12) % (final_rule.src_port) +
+                "dPort: %s".ljust(12) % (final_rule.dst_port) +
+                "action: %s".ljust(20) % (final_rule.action) +
+                "Priority: %s" %(str(sorted(final_actions)[0])) +
+                 "\n")
+            actions.append(rules[sorted(final_actions)[0]].action)
+        else:
+            noMatch = noMatch + 1
+            #print("action picked: " + "No match!")
+    print("%d".ljust(8) %Matched + "packets matched the rules.\n" + "%d".ljust(5) %noMatch + "packets did not match the rules.\n")
     return actions
