@@ -120,29 +120,30 @@ def show(root, indent="", has_zero=False):
         
         
 def match_dst(node, dst_bin, dst_index, actions):
+#     print(node.value)
     if node.end :
         actions.extend(node.rules)
         # we should not return otherwise we can gave more end
     
     # if it's 32bits
-    if dst_index >= 32:
+    if dst_index > 32:
         #match final
         if node.zero.value == "$":
             #rules added
             actions.extend(node.zero.rules)
         return
     
-    if node.zero is not None and dst_bin[dst_index] == "0":
+    if node.zero is not None and (dst_bin[dst_index] == "0" or node.zero.value == "$"):
         match_dst(node.zero, dst_bin, dst_index+1, actions)
-        return
     if node.one is not None and dst_bin[dst_index] == "1":
         match_dst(node.one, dst_bin, dst_index+1, actions)
-        return
+        
     
     return
 
 
 def match(node, src_bin, src_index, dst_bin, dst_index, actions):
+#     print(node.value)
     if node.end :
         #rules=[1,2] > [1,2,3]
         actions.extend(node.rules)
@@ -153,12 +154,10 @@ def match(node, src_bin, src_index, dst_bin, dst_index, actions):
     
     # we start from root, the root have 0, src_incoming_packet=0
     # we have rule in zero
-    if node.zero is not None and src_bin[src_index] == "0":
+    if node.zero is not None and (src_bin[src_index] == "0" or node.zero.value == "$" ):
         match(node.zero, src_bin, src_index+1, dst_bin, dst_index, actions)
-        return
     if node.one is not None and src_bin[src_index] == "1":
         match(node.one, src_bin, src_index+1, dst_bin, dst_index, actions)
-        return
     
     return
 
@@ -167,6 +166,7 @@ def get_packets_actions(root, packets, rules, debug):
     noMatch = 0
     Matched = 0
     for packet in packets:
+#         txt = input("Type something to test this out: ")
         candidate_actions = []
         match(root, packet.src_binary, 0, packet.dst_binary, 0, candidate_actions)
     
@@ -206,7 +206,7 @@ def get_packets_actions(root, packets, rules, debug):
                 "sPort: %s".ljust(12) % (final_rule.src_port) +
                 "dPort: %s".ljust(12) % (final_rule.dst_port) +
                 "action: %s".ljust(20) % (final_rule.action) +
-                "Priority: %s" %(str(sorted(final_actions)[0])) +
+                "Priority: %s" %(str(sorted(final_actions)[0]+1)) +
                  "\n")
             actions.append(rules[sorted(final_actions)[0]].action)
         else:

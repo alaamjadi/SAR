@@ -30,3 +30,17 @@ python .\main.py .\rules\Rule_29.txt .\packets\packets.txt > .\evaluation\report
 python .\main.py .\rules\Rule_30.txt .\packets\packets.txt > .\evaluation\report_30.txt
 python .\main.py .\rules\Rule_31.txt .\packets\packets.txt > .\evaluation\report_31.txt
 python .\main.py .\rules\Rule_32.txt .\packets\packets.txt > .\evaluation\report_32.txt
+
+
+
+
+
+
+
+
+python .\main.py .\rules\Rule_LookAlike1-10.txt .\packets\packets_LookAlike.txt > .\evaluation\report_LookAlike1-10.txt
+python .\main.py .\rules\Rule_LookAlike1-20.txt .\packets\packets_LookAlike.txt > .\evaluation\report_LookAlike1-20.txt
+python .\main.py .\rules\Rule_LookAlike1-30.txt .\packets\packets_LookAlike.txt > .\evaluation\report_LookAlike1-30.txt
+python .\main.py .\rules\Rule_LookAlike10-20.txt .\packets\packets_LookAlike.txt > .\evaluation\report_LookAlike10-20.txt
+python .\main.py .\rules\Rule_LookAlike10-30.txt .\packets\packets_LookAlike.txt > .\evaluation\report_LookAlike10-30.txt
+python .\main.py .\rules\Rule_LookAlike20-30.txt .\packets\packets_LookAlike.txt > .\evaluation\report_LookAlike20-30.txt
