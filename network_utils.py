@@ -49,13 +49,13 @@ class Rule:
 This method read all rules from a file.
 """
 def read_rules(rule_file_path):
-    rules = []
+    all_rules = []
     rules_file = open(rule_file_path, 'r') 
     rules_raw = rules_file.readlines()
     for line in rules_raw: 
         tmp = [ elem.strip() for elem in line.split(",")]
-        rules.append(Rule(tmp[0], tmp[1], tmp[2], tmp[3], tmp[4], tmp[5]))
-    return rules
+        all_rules.append(Rule(tmp[0], tmp[1], tmp[2], tmp[3], tmp[4], tmp[5]))
+    return all_rules
 
 """
 This class stores packet informations and its metadata. Metadatas are calculated in constructor

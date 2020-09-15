@@ -7,13 +7,17 @@ import time
 rule_file    = sys.argv[1]
 packet_file  = sys.argv[2]
 
-rules = nu.read_rules(rule_file)
+all_rules = nu.read_rules(rule_file)
 
 # Generate Tree
 root = bt.Node()  #show(root)   
 
-src_sub_binaries = [x.src_sub_binary for x in rules]
-dst_sub_binaries = [x.dst_sub_binary for x in rules]
+#print(rules)
+
+src_sub_binaries = [x.src_sub_binary for x in all_rules]
+dst_sub_binaries = [x.dst_sub_binary for x in all_rules]
+#print(src_sub_binaries)
+#print(dst_sub_binaries)
 
 # Go and make the Tiers (Tier 1 and then Tier2) 
 for i in range(0, len(src_sub_binaries)):
@@ -22,10 +26,12 @@ for i in range(0, len(src_sub_binaries)):
 # When we reach here the Tier 1 and Tier 2 has been completed.
 # We have the rule Tree and now we should check the incoming packets with this tree.
 
+#bt.show(root)
+
 # Test incoming_packets2.txt
 packets = nu.read_packets(packet_file)
 start = time.time_ns()
-actions = bt.get_packets_actions(root, packets, rules, False)
+actions = bt.get_packets_actions(root, packets, all_rules, False)
 stop = time.time_ns()
 Elpased = int(stop - start)
 average = Elpased/100000
@@ -33,7 +39,6 @@ print("It took %d ns to classify 100.000 packets" % Elpased)
 print("The average time for each packet is %d ns" % average)
 
 #print(actions)
-
 
 # Test random generated packets
 """ nu.generate_random_packet_file("random_packets.txt",100000)
