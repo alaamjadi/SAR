@@ -145,7 +145,7 @@ def match_dst(node, dst_bin, dst_index, candidate_actions):
     return
 
 
-def match(node, src_bin, src_index, dst_bin, dst_index, candidate_actions):
+def match_src(node, src_bin, src_index, dst_bin, dst_index, candidate_actions):
 #     print(node.value)
     if node.end :
         #node_rules=[1,2] > [1,2,3]
@@ -158,10 +158,10 @@ def match(node, src_bin, src_index, dst_bin, dst_index, candidate_actions):
     # we start from root
     # If it has a zero attribute
     if node.zero is not None and (src_bin[src_index] == "0" or node.zero.value == "$" ):
-        match(node.zero, src_bin, src_index+1, dst_bin, dst_index, candidate_actions)
+        match_src(node.zero, src_bin, src_index+1, dst_bin, dst_index, candidate_actions)
     #If it has a one attribute
     if node.one is not None and src_bin[src_index] == "1":
-        match(node.one, src_bin, src_index+1, dst_bin, dst_index, candidate_actions)
+        match_src(node.one, src_bin, src_index+1, dst_bin, dst_index, candidate_actions)
     return
 
 def get_packets_actions(root, packets, all_rules, debug):
@@ -171,7 +171,7 @@ def get_packets_actions(root, packets, all_rules, debug):
     for packet in packets:
 #         txt = input("Type something to test this out: ")
         candidate_actions = []
-        match(root, packet.src_binary, 0, packet.dst_binary, 0, candidate_actions)
+        match_src(root, packet.src_binary, 0, packet.dst_binary, 0, candidate_actions)
         
     
         final_actions = []
