@@ -44,3 +44,39 @@ python .\main.py .\rules\Rule_LookAlike1-30.txt .\packets\packets_LookAlike.txt 
 python .\main.py .\rules\Rule_LookAlike10-20.txt .\packets\packets_LookAlike.txt > .\evaluation\report_LookAlike10-20.txt
 python .\main.py .\rules\Rule_LookAlike10-30.txt .\packets\packets_LookAlike.txt > .\evaluation\report_LookAlike10-30.txt
 python .\main.py .\rules\Rule_LookAlike20-30.txt .\packets\packets_LookAlike.txt > .\evaluation\report_LookAlike20-30.txt
+
+
+
+
+python .\main.py .\rules\Rule_01.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_01.txt
+python .\main.py .\rules\Rule_02.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_02.txt
+python .\main.py .\rules\Rule_03.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_03.txt
+python .\main.py .\rules\Rule_04.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_04.txt
+python .\main.py .\rules\Rule_05.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_05.txt
+python .\main.py .\rules\Rule_06.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_06.txt
+python .\main.py .\rules\Rule_07.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_07.txt
+python .\main.py .\rules\Rule_08.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_08.txt
+python .\main.py .\rules\Rule_09.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_09.txt
+python .\main.py .\rules\Rule_10.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_10.txt
+python .\main.py .\rules\Rule_11.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_11.txt
+python .\main.py .\rules\Rule_12.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_12.txt
+python .\main.py .\rules\Rule_13.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_13.txt
+python .\main.py .\rules\Rule_14.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_14.txt
+python .\main.py .\rules\Rule_15.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_15.txt
+python .\main.py .\rules\Rule_16.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_16.txt
+python .\main.py .\rules\Rule_17.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_17.txt
+python .\main.py .\rules\Rule_18.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_18.txt
+python .\main.py .\rules\Rule_19.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_19.txt
+python .\main.py .\rules\Rule_20.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_20.txt
+python .\main.py .\rules\Rule_21.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_21.txt
+python .\main.py .\rules\Rule_22.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_22.txt
+python .\main.py .\rules\Rule_23.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_23.txt
+python .\main.py .\rules\Rule_24.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_24.txt
+python .\main.py .\rules\Rule_25.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_25.txt
+python .\main.py .\rules\Rule_26.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_26.txt
+python .\main.py .\rules\Rule_27.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_27.txt
+python .\main.py .\rules\Rule_28.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_28.txt
+python .\main.py .\rules\Rule_29.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_29.txt
+python .\main.py .\rules\Rule_30.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_30.txt
+python .\main.py .\rules\Rule_31.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_31.txt
+python .\main.py .\rules\Rule_32.txt .\packets\packets-with-one-dimension-match.txt > .\evaluation\report_32.txt

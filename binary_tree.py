@@ -54,11 +54,11 @@ def add_dst_nodes(node, dst_rule, index, rule_index):
 This Method add first-tier nodes to the tree recursively
 """
 def add_src_nodes(node, src_rule, index, dst_rule, rule_index):
-    # in case of src_sub='*' this block will execute and then next if statement will execute too.
+    # if src_sub='*' then src_rule is None. We create an empty list in order to jump to the if statement below
     if src_rule is None:
         src_rule=[]
     
-    # If we have * as src_binary or dst_binary and if we reached the last bit of src_binary
+    # If src_sub='*' and dst_sub='*' and if we reached the last bit of src_binary
     # We enter this statement when we are finished with field1
     if len(src_rule) <= index :
         # in case of src_sub=10.0.0.0/24 dst_sub = '*' or src_sub='*' dst_sub = '10.0.0.0/24' or src_sub='*' dst_sub = '*'
@@ -139,8 +139,10 @@ def match_dst(node, dst_bin, dst_index, candidate_actions):
         return
     
     if node.zero is not None and (dst_bin[dst_index] == "0" or node.zero.value == "$"):
+        fake_delay()
         match_dst(node.zero, dst_bin, dst_index+1, candidate_actions)
     if node.one is not None and dst_bin[dst_index] == "1":
+        fake_delay()
         match_dst(node.one, dst_bin, dst_index+1, candidate_actions)
     return
 
@@ -158,9 +160,11 @@ def match_src(node, src_bin, src_index, dst_bin, dst_index, candidate_actions):
     # we start from root
     # If it has a zero attribute
     if node.zero is not None and (src_bin[src_index] == "0" or node.zero.value == "$" ):
+        fake_delay()
         match_src(node.zero, src_bin, src_index+1, dst_bin, dst_index, candidate_actions)
     #If it has a one attribute
     if node.one is not None and src_bin[src_index] == "1":
+        fake_delay()
         match_src(node.one, src_bin, src_index+1, dst_bin, dst_index, candidate_actions)
     return
 
@@ -185,16 +189,16 @@ def get_packets_actions(root, packets, all_rules, debug):
                 continue
             final_actions.append(i)
         
-        if debug:
+        """ if debug:
             if len(final_actions) != 0:
                 print("action picked: " + str(sorted(final_actions)[0]))
             else:
                 print(final_actions)
-                print("action picked: " + "No match!")
+                print("action picked: " + "No match!") """
         if len(final_actions) != 0:
             Matched = Matched + 1
             final_rule = all_rules[sorted(final_actions)[0]]
-            print(
+            """ print(
                 "Packet>> ".ljust(10) +
                 "sIP: %s".ljust(20) % (packet.src_ip) + 
                 "dIP: %s".ljust(20) % (packet.dst_ip) +
@@ -210,10 +214,13 @@ def get_packets_actions(root, packets, all_rules, debug):
                 "dPort: %s".ljust(12) % (final_rule.dst_port) +
                 "action: %s".ljust(20) % (final_rule.action) +
                 "Priority: %s" %(str(sorted(final_actions)[0]+1)) +
-                 "\n")
+                 "\n") """
             actions.append(all_rules[sorted(final_actions)[0]].action)
         else:
             noMatch = noMatch + 1
             #print("action picked: " + "No match!")
     print("%d".ljust(8) %Matched + "packets matched the rules.\n" + "%d".ljust(5) %noMatch + "packets did not match the rules.\n")
     return actions
+
+def fake_delay():
+    [0] * 200
