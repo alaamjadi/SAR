@@ -197,28 +197,15 @@ def match(root, node, packet_src, packet_dst, index, candidates, Tier1, rule_src
             
             for i in candidates_T1:
                 print("Checking the candidate: ", i)
-                #print(candidates_T1[i])
-                if rule_src_binaries[i] == "*":
+                
+                print(candidates_T1[i])
+                """ if rule_src_binaries[i] == "*":
                     match(root, MoveToNode(root, "*", 0), packet_src, packet_dst, 0, candidates_T2, False, rule_src_binaries)
                 else:
                     #print(MoveToNode(root, rule_src_binaries[int(candidates_T1[i])],0))
                     match(root, MoveToNode(root, rule_src_binaries[i],0), packet_src, packet_dst, 0, candidates_T2, False, rule_src_binaries)
                 tmp = sorted(list(set(candidates_T1).intersection(candidates_T2)))
-                candidates_T1_T2.extend(tmp)
-    
-    elif not Tier1:
-        print("TIER 2:: ", "Node: ", node, "Packet_Source: ", packet_src, "Packet_Destination: ", packet_dst, "Index: ", index)
-        if node.node_rules is not None:
-            candidates.extend(node.node_rules)
-        if packet_dst[index] == "0":
-            
-            if node.left is not None:
-                match(root, node.left, packet_src, packet_dst, index+1, candidates, False, rule_src_binaries)
-        if packet_dst[index] == "1":
-            print("Reached Here")
-            if node.right is not None:
-                match(root, node.right, packet_src, packet_dst, index+1, candidates, False, rule_src_binaries)
-        return candidates_T1_T2
+                candidates_T1_T2.extend(tmp) """
 
 def MoveToNode (node, address, index):
     #print(node, index)
