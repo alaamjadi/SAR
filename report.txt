@@ -1,0 +1,5 @@
+1      packets matched the rules.
+0   packets did not match the rules.
+
+It took 0 ns to classify 1 packets
+The average time for each packet is 0 ns

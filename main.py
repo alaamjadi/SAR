@@ -1,32 +1,48 @@
 import sys
-import functions as f
 import time
-
-rule_file_path      = sys.argv[1]
-packet_file_path    = sys.argv[2]
-
-root = f.Node(tag="^")
+import network_utils as nu
+import binary_tree as bt
 
 
-all_rules = f.read_rule_file(rule_file_path)
+# Receiving Rule list and packet list as input arguments
+rule_file    = sys.argv[1]
+packet_file  = sys.argv[2]
 
-rule_src_binaries = [eachElement.src_binary for eachElement in all_rules]
-rule_dst_binaries = [eachElement.dst_binary for eachElement in all_rules]
+# Reading all the rule entries and putting them into a list
+all_rules = nu.read_rules(rule_file)
 
-for i in range(0, len(rule_src_binaries)):
-    f.add_node (root, rule_src_binaries[i], rule_dst_binaries[i], 0, i, True)
+# Creating the root node
+root = bt.Node()
 
-f.show(root)
+# Converting the Rule's source and destination netIDs into the binary format and putting them into two separate lists
+src_sub_binaries = [x.src_sub_binary for x in all_rules]
+dst_sub_binaries = [x.dst_sub_binary for x in all_rules]
 
-all_packets = f.read_packet_file(packet_file_path)
+# Going through all Rule's source and destination sub binaries to create the tree
+for i in range(0, len(src_sub_binaries)):
+    bt.add_src_nodes(root, src_sub_binaries[i], 0, dst_sub_binaries[i],i)
 
+# Draw the tree that was created i the previous step
+#bt.show(root)
+
+# Reading all the incoming packets and putting them into a list
+packets = nu.read_packets(packet_file)
+
+# Starting the timer for measuring the Classification time
 start = time.time_ns()
-# Classification Algorithm
-print (f.clasify(root, all_packets, all_rules, rule_src_binaries, rule_dst_binaries))
 
+# Classificaton Algoritm (Matching and getting the packets actions)
+actions = bt.get_packets_actions(root, packets, all_rules, False)
+
+# Stopping the timer for measuring the Classification time
 stop = time.time_ns()
 
-Elpased = int(stop - start)/1000000
-average = Elpased/len(all_packets)
-print("It took %d ms to classify %d packets" % (Elpased, len(all_packets)))
-print("The average time for each packet is %d ms" % average)
+# Calculating the elpased time between the start and stop of the timer
+Elpased = int(stop - start)
+
+# Calculating the average classification time
+average = Elpased/len(packets)
+
+# Printing the results of the classification (Average Time)
+print("It took %d ns to classify %d packets" % (Elpased,len(packets)))
+print("The average time for each packet is %d ns" % average)
