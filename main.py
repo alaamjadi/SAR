@@ -16,7 +16,7 @@ rule_dst_binaries = [eachElement.dst_binary for eachElement in all_rules]
 for i in range(0, len(rule_src_binaries)):
     f.add_node (root, rule_src_binaries[i], rule_dst_binaries[i], 0, i, True)
 
-#f.show(root)
+f.show(root)
 
 all_packets = f.read_packet_file(packet_file_path)
 
@@ -26,7 +26,7 @@ print (f.clasify(root, all_packets, all_rules, rule_src_binaries, rule_dst_binar
 
 stop = time.time_ns()
 
-Elpased = int(stop - start)
+Elpased = int(stop - start)/1000000
 average = Elpased/len(all_packets)
-print("It took %d ns to classify %d packets" % (Elpased, len(all_packets)))
-print("The average time for each packet is %d ns" % average)
+print("It took %d ms to classify %d packets" % (Elpased, len(all_packets)))
+print("The average time for each packet is %d ms" % average)

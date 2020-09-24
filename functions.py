@@ -172,7 +172,7 @@ def add_node (node, src_binary, dst_binary, index, all_rule_index, Tier1):
 
 def match(root, node, packet_src, packet_dst, index, candidates, Tier1, rule_src_binaries):
     if Tier1:
-        #print("TIER 1:: ", "Node: ", node, "Packet_Source: ", packet_src, "Packet_Destination: ", packet_dst, "Index: ", index)
+        print("TIER 1:: ", "Node: ", node, "Packet_Source: ", packet_src, "Packet_Destination: ", packet_dst, "Index: ", index)
         # Is the node gray?
         if node.node_rules is not None:
             candidates.extend(node.node_rules)
@@ -188,43 +188,50 @@ def match(root, node, packet_src, packet_dst, index, candidates, Tier1, rule_src
                 return
         # No match!
         if len(candidates) == 0:
-            #print("No Match in Tier1")
+            print("No Match in Tier1")
             return
         # We reached inermediate or end node, we have to find the nodes one by one with having higher priority rules.
         if len(candidates) != 0:
             candidates_T1 = sorted(set(candidates))
+            print("We have a match(es) in Tier 1 and the rule indices are ", candidates_T1)
+            
             for i in candidates_T1:
+                print("Checking the candidate: ", i)
+                #print(candidates_T1[i])
                 if rule_src_binaries[i] == "*":
                     match(root, MoveToNode(root, "*", 0), packet_src, packet_dst, 0, candidates_T2, False, rule_src_binaries)
                 else:
+                    #print(MoveToNode(root, rule_src_binaries[int(candidates_T1[i])],0))
                     match(root, MoveToNode(root, rule_src_binaries[i],0), packet_src, packet_dst, 0, candidates_T2, False, rule_src_binaries)
                 tmp = sorted(list(set(candidates_T1).intersection(candidates_T2)))
                 candidates_T1_T2.extend(tmp)
     
     elif not Tier1:
-        #print("TIER 2:: ", "Node: ", node, "Packet_Source: ", packet_src, "Packet_Destination: ", packet_dst, "Index: ", index)
+        print("TIER 2:: ", "Node: ", node, "Packet_Source: ", packet_src, "Packet_Destination: ", packet_dst, "Index: ", index)
         if node.node_rules is not None:
             candidates.extend(node.node_rules)
         if packet_dst[index] == "0":
+            
             if node.left is not None:
                 match(root, node.left, packet_src, packet_dst, index+1, candidates, False, rule_src_binaries)
         if packet_dst[index] == "1":
+            print("Reached Here")
             if node.right is not None:
                 match(root, node.right, packet_src, packet_dst, index+1, candidates, False, rule_src_binaries)
-        
-    return candidates_T1_T2
+        return candidates_T1_T2
 
 def MoveToNode (node, address, index):
+    #print(node, index)
     if address == "*":
         index += 1
     if len(address) == index:
-        return node.rootTier2
+        return node
     if address[index] == "0":
         MoveToNode(node.left, address, index + 1)
-        return node.rootTier2
+        return node
     if address[index] == "1":
         MoveToNode(node.right, address, index + 1)
-        return node.rootTier2
+        return node
 
 def Protocol_Port_Check(all_rules, rule_indices, packet):
     rule_indices = sorted(list(set(rule_indices)))
@@ -261,6 +268,7 @@ def clasify(node, all_packets, all_rules, rule_src_binaries, rule_dst_binaries):
             print("Match found! Rule Indices: \n", candidates_PP)
         else:
             print("No match found!") """
+        print(candidates_PP)
     return candidates_PP
 
 #print("Error:: sPrefix is not  *  or  0  or  1. Check the rule number %d" %all_rule_index + 1)
